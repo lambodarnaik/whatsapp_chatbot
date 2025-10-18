@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import verifySignature from "./utils/verifySignature.js";
-import webhookRoutes from "./webhook.js";
+import webhookRoutes from "../api/webhook.js";
 
 dotenv.config();
 

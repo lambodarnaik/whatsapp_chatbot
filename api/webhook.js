@@ -1,15 +1,12 @@
 // api/webhook.js
 import express from "express";
-import bodyParser from "body-parser";
 import axios from "axios";
-import dotenv from "dotenv";
-import verifySignature from "../src/utils/verifySignature.js";
-import { handleIncoming } from "../src/handlers/messageHandler.js";
+import verifySignature from "../utils/verifySignature.js";
+import { handleIncoming } from "../handlers/messageHandler.js";
 
-dotenv.config();
 const app = express();
 
-app.use(bodyParser.json({
+app.use(express.json({
   verify: verifySignature(process.env.APP_SECRET)
 }));
 
@@ -17,8 +14,8 @@ const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 const TOKEN = process.env.WHATSAPP_TOKEN;
 const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
 
-// webhook verification for Meta (GET)
-app.get("/api/webhook", (req, res) => {
+// GET for webhook verification
+app.get("/", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
@@ -29,12 +26,11 @@ app.get("/api/webhook", (req, res) => {
   res.sendStatus(403);
 });
 
-// webhook receiver (POST)
-app.post("/api/webhook", async (req, res) => {
+// POST for receiving messages
+app.post("/", async (req, res) => {
   try {
-    const body = req.body;
-    if (body.object && body.entry) {
-      await handleIncoming(body, sendWhatsAppMessage);
+    if (req.body.object && req.body.entry) {
+      await handleIncoming(req.body, sendWhatsAppMessage);
     }
     res.sendStatus(200);
   } catch (err) {
@@ -50,5 +46,4 @@ async function sendWhatsAppMessage(payload) {
   });
 }
 
-// ✅ Export for Vercel (no app.listen)
 export default app;
