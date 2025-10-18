@@ -1,8 +1,8 @@
 // api/webhook.js
 import express from "express";
 import axios from "axios";
-import verifySignature from "../utils/verifySignature.js";
-import { handleIncoming } from "../handlers/messageHandler.js";
+import verifySignature from "../src/utils/verifySignature.js";
+import { handleIncoming } from "../src/handlers/messageHandler.js";
 
 const app = express();
 
