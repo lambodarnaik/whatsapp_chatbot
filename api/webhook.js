@@ -30,6 +30,7 @@ export default async function handler(req, res) {
     console.log("req body", req.body)
     console.log("req body object", req.body.object)
     console.log("req body object", req.body.entry)
+    console.log("checking error", req.body.object && req.body.entry)
     try {
       if (req.body.object && req.body.entry) {
         await handleIncoming(req.body, sendWhatsAppMessage);
